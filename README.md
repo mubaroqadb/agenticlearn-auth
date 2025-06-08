@@ -14,15 +14,6 @@ Sistem autentikasi dengan JSCroot Green Computing integration untuk platform Age
 
 **URL:** https://mubaroqadb.github.io/agenticlearn-auth/
 
-## 🔑 Demo Credentials
-
-Gunakan credentials berikut untuk testing:
-
-| Role | Email | Password |
-|------|-------|----------|
-| **Student** | `student1@agenticlearn.id` | `password123` |
-| **Educator** | `educator@agenticlearn.id` | `password123` |
-| **Admin** | `admin@agenticlearn.id` | `password123` |
 
 ## ✨ Features
 
