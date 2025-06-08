@@ -100,9 +100,6 @@ function checkExistingLogin() {
 // Auto-fill demo credentials
 function fillDemoCredentials(role) {
     const credentials = {
-        student: { email: "student1@agenticlearn.id", password: "password123" },
-        educator: { email: "educator@agenticlearn.id", password: "password123" },
-        admin: { email: "admin@agenticlearn.id", password: "password123" }
     };
 
     const cred = credentials[role];
@@ -115,12 +112,6 @@ function fillDemoCredentials(role) {
 // Add click handlers for demo credentials
 function setupDemoCredentialHandlers() {
     document.addEventListener('click', (e) => {
-        if (e.target.textContent.includes('student1@agenticlearn.id')) {
-            fillDemoCredentials('student');
-        } else if (e.target.textContent.includes('educator@agenticlearn.id')) {
-            fillDemoCredentials('educator');
-        } else if (e.target.textContent.includes('admin@agenticlearn.id')) {
-            fillDemoCredentials('admin');
         }
     });
 }
