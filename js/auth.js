@@ -159,7 +159,7 @@ async function checkExistingLogin() {
             // Try direct backend call as fallback (both localhost and production)
             const backendUrls = [
                 'http://localhost:8080/api/v1/auth/profile',
-                'https://agenticlearn-backend-production.up.railway.app/api/v1/auth/profile'
+                'https://api.agenticlearn.com/api/v1/auth/profile' // Will be Google Cloud endpoint
             ];
 
             for (const url of backendUrls) {
