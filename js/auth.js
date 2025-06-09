@@ -94,28 +94,11 @@ function checkExistingLogin() {
     }
 }
 
-// Auto-fill demo credentials
+// Auto-fill demo credentials (credentials stored securely in backend)
 function fillDemoCredentials(role) {
-    const credentials = {
-        student: {
-            email: "student1@agenticlearn.id",
-            password: "password123"
-        },
-        educator: {
-            email: "educator@agenticlearn.id",
-            password: "password123"
-        },
-        admin: {
-            email: "admin@agenticlearn.id",
-            password: "password123"
-        }
-    };
-
-    const cred = credentials[role];
-    if (cred) {
-        document.getElementById("email").value = cred.email;
-        document.getElementById("password").value = cred.password;
-    }
+    // Demo credentials are stored securely in the backend
+    // Contact administrator for demo access credentials
+    showNotification("Demo credentials available in backend documentation", "info");
 }
 
 // Add click handlers for demo credentials
@@ -126,6 +109,28 @@ function setupDemoCredentialHandlers() {
             fillDemoCredentials(role);
         }
     });
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: white;
+        z-index: 1000;
+        background: ${type === 'info' ? '#2196F3' : type === 'error' ? '#f44336' : '#4CAF50'};
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
 
 function initializeAuth() {
