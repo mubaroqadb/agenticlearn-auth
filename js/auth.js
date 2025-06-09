@@ -1,10 +1,11 @@
-// Authentication - JSCroot Implementation
+// Authentication - JSCroot Implementation with Cloud Functions
 import { setCookieWithExpireHour, getCookie } from "https://cdn.jsdelivr.net/gh/jscroot/lib@0.0.4/cookie.js";
 import { setInner, getValue } from "https://cdn.jsdelivr.net/gh/jscroot/lib@0.0.4/element.js";
 import { redirect } from "https://cdn.jsdelivr.net/gh/jscroot/lib@0.0.4/url.js";
+import { AgenticAPIClient } from "../agenticlearn-shared/js/api-client.js";
 
-// Dynamic API Configuration
-const API_BASE_URL = "window.location.hostname.includes("localhost") ? "http://localhost:8080/api/v1" : "https://agenticlearn-backend-production.up.railway.app/api/v1"";
+// Initialize API client
+const apiClient = new AgenticAPIClient();
 
 // Get GitHub username for redirects
 const GITHUB_USERNAME = window.location.hostname.includes('github.io')
@@ -28,21 +29,16 @@ async function performLogin() {
     setInner("message", "");
 
     try {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        // Use Cloud Functions API client
+        const data = await apiClient.auth('/login', {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-Carbon-Efficient": "true",
-                "X-JSCroot": "optimized"
-            },
-            body: JSON.stringify({ email, password })
+            body: { email, password }
         });
 
-        const data = await response.json();
-
-        if (response.ok && data.status === "success") {
-            // Set cookie for 24 hours
-            setCookieWithExpireHour("login", data.token, 24);
+        if (data.status === "success") {
+            // Set cookie for 24 hours - use access_token from Cloud Functions
+            const token = data.data.access_token || data.token;
+            setCookieWithExpireHour("login", token, 24);
 
             // Track carbon footprint
             const duration = performance.now() - startTime;
@@ -54,7 +50,8 @@ async function performLogin() {
 
             // Redirect based on role
             setTimeout(() => {
-                switch (data.user.role) {
+                const user = data.data.user || data.user;
+                switch (user.role) {
                     case "student":
                         redirect(`https://${GITHUB_USERNAME}.github.io/agenticlearn-student`);
                         break;
@@ -100,6 +97,18 @@ function checkExistingLogin() {
 // Auto-fill demo credentials
 function fillDemoCredentials(role) {
     const credentials = {
+        student: {
+            email: "student1@agenticlearn.id",
+            password: "password123"
+        },
+        educator: {
+            email: "educator@agenticlearn.id",
+            password: "password123"
+        },
+        admin: {
+            email: "admin@agenticlearn.id",
+            password: "password123"
+        }
     };
 
     const cred = credentials[role];
@@ -112,6 +121,9 @@ function fillDemoCredentials(role) {
 // Add click handlers for demo credentials
 function setupDemoCredentialHandlers() {
     document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('demo-btn')) {
+            const role = e.target.dataset.role;
+            fillDemoCredentials(role);
         }
     });
 }
@@ -136,7 +148,7 @@ function initializeAuth() {
         }
     });
 
-    console.log("🌱 AgenticLearn Auth loaded with JSCroot");
+    console.log("🌱 AgenticLearn Auth loaded with JSCroot + Cloud Functions");
 }
 
 // Initialize when DOM ready
