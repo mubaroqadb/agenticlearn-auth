@@ -73,7 +73,7 @@ async function performLogin() {
 
     try {
         // Use Cloud Functions API client
-        const data = await apiClient.login({
+        const data = await apiClient.auth('/login', {
             method: "POST",
             body: { email, password }
         });
@@ -134,7 +134,7 @@ async function checkExistingLogin() {
             }
 
             // Fallback to API call
-            const response = await apiClient.getProfile();
+            const response = await apiClient.auth('/profile');
             console.log("📋 Profile response:", response);
 
             const user = response.data?.profile || response.data?.user || response.user;
